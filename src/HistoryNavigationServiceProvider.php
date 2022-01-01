@@ -21,6 +21,6 @@ class HistoryNavigationServiceProvider extends ServiceProvider implements Deferr
 
     public function provides()
     {
-        return ['laravel_history_navigation'];
+        return ['laravel.history.navigation'];
     }
 }
