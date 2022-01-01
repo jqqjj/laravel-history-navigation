@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Jqqjj\\LaravelNavigation\\": "src/"
+            "Jqqjj\\LaravelHistoryNavigation\\": "src/"
         }
     },
     "extra": {
@@ -26,7 +26,7 @@
             ]
         },
         "aliases": {
-            "N": "Jqqjj\\LaravelHistoryNavigation\\Facades\\HistoryNavigation"
+            "H": "Jqqjj\\LaravelHistoryNavigation\\Facades\\HistoryNavigation"
         }
     }
 }
