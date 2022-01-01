@@ -29,6 +29,6 @@ class HistoryNavigation extends Facade
 
     protected static function getFacadeAccessor()
     {
-        return "laravel_history_navigation";
+        return "laravel.history.navigation";
     }
 }
