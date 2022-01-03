@@ -14,7 +14,7 @@ class HistoryNavigationServiceProvider extends ServiceProvider implements Deferr
 
     public function register()
     {
-        $this->app->singleton('laravel_history_navigation', function ($app) {
+        $this->app->singleton('laravel.history.navigation', function ($app) {
             return new HistoryNavigation();
         });
     }
