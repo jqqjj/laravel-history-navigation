@@ -77,7 +77,7 @@ class HistoryNavigation
 
         [$prev, $params] = $this->splitPrev($urlInfo['query']??'');
         if (!empty($prev)) {
-            $urls = array_merge($this->parseStacks($prev));
+            $urls = $this->parseStacks($prev);
         }
 
         $isSecure = !empty($urlInfo['scheme']) && $urlInfo['scheme'] == 'https';
