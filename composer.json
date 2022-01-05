@@ -23,10 +23,10 @@
         "laravel": {
             "providers": [
                 "Jqqjj\\LaravelHistoryNavigation\\HistoryNavigationServiceProvider"
-            ]
-        },
-        "aliases": {
-            "H": "Jqqjj\\LaravelHistoryNavigation\\Facades\\HistoryNavigation"
+            ],
+            "aliases": {
+                "H": "Jqqjj\\LaravelHistoryNavigation\\Facades\\HistoryNavigation"
+            }
         }
     }
 }
