@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string prev($defaultUrl = null)
  * @method static string prevUrl($url, $defaultUrl = null)
  * @method static string prevRoute($route, $defaultUrl = null)
+ * @method static bool hasPrev()
  *
  * @see \Jqqjj\LaravelHistoryNavigation\HistoryNavigation
  */
