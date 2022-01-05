@@ -60,6 +60,11 @@ class HistoryNavigation
     {
         return $this->prevUrl(route($route), $defaultUrl);
     }
+    
+    public function hasPrev()
+    {
+        return count($this->stacks) > 0;
+    }
 
     protected function parseStacks($url)
     {
