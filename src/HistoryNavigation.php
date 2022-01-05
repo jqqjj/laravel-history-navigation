@@ -86,14 +86,22 @@ class HistoryNavigation
         }
 
         $isSecure = !empty($urlInfo['scheme']) && $urlInfo['scheme'] == 'https';
-        array_push($urls, [
+        $currentUrl = [
             'secure' => $isSecure,
             'host' => $urlInfo['host'] ?? $this->request->getHost(),
             'port' => $urlInfo['port'] ?? ($isSecure ? 443 : 80),
             'path' => !empty($urlInfo['path']) ? '/' . ltrim($urlInfo['path'], '/') : '/',
             'params' => !empty($params) ? $params : [],
             'fragment' => $urlInfo['fragment'] ?? '',
-        ]);
+        ];
+        if (count($urls) > 0) {
+            $lastUrl = $urls[count($urls) - 1];
+            if ($lastUrl['secure'] == $currentUrl['secure'] && $lastUrl['host'] == $currentUrl['host']
+                && $lastUrl['port'] == $currentUrl['port'] && $lastUrl['path'] == $currentUrl['path']) {
+                array_pop($urls);
+            }
+        }
+        array_push($urls, $currentUrl);
 
         return $urls;
     }
