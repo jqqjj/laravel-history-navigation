@@ -19,20 +19,13 @@ class HistoryNavigation
         $this->request = app('request');
         $prevStr = $this->request->has(H::$k) ? $this->request->input(H::$k) : $this->request->server("HTTP_REFERER");
         if (!empty($prevStr)) {
-            $this->stacks = $this->parseStacks($prevStr);
+            $this->stacks = $this->rtrim($this->parseStacks($prevStr), $this->getCurrentUrlStack());
         }
     }
 
     public function current()
     {
-        $currentUrl = $this->request->fullUrlWithoutQuery([H::$k]);
-        $currentStacks = $this->parseStacks($currentUrl);
-
-        $isLastStack = count($this->stacks) && count($this->stacks) - 1 == $this->getStackIndex($currentStacks[0]);
-        $stacks = array_slice($this->stacks, 0, $isLastStack ? count($this->stacks) - 1 : count($this->stacks));
-        array_push($stacks, $currentStacks[0]);
-
-        return $this->formatStacks($stacks);
+        return $this->formatStacks(array_merge($this->stacks, [$this->getCurrentUrlStack()]));
     }
 
     public function prev($defaultUrl = null)
@@ -48,8 +41,7 @@ class HistoryNavigation
         if (empty($this->stacks)) {
             return $defaultUrl ?? (H::$defaultUrl ?? '/');
         }
-        $stacks = $this->parseStacks($url);
-        $index = $this->getStackIndex($stacks[0]);
+        $index = $this->searchIndex($this->stacks, $this->parseStacks($url)[0]);
         if ($index == -1) {
             return $defaultUrl ?? (H::$defaultUrl ?? '/');
         }
@@ -60,10 +52,17 @@ class HistoryNavigation
     {
         return $this->prevUrl(route($route), $defaultUrl);
     }
-    
+
     public function hasPrev()
     {
         return count($this->stacks) > 0;
+    }
+
+    protected function getCurrentUrlStack()
+    {
+        $currentUrl = $this->request->fullUrlWithoutQuery([H::$k]);
+        $currentStacks = $this->parseStacks($currentUrl);
+        return $currentStacks[0];
     }
 
     protected function parseStacks($url)
@@ -120,15 +119,29 @@ class HistoryNavigation
         return [$prev, $queryInfo];
     }
 
-    protected function getStackIndex($stack)
+    protected function searchIndex($stacks, $stack)
     {
-        for ($i = count($this->stacks) - 1; $i >= 0; $i--) {
-            if ($this->stacks[$i]['secure'] == $stack['secure'] && $this->stacks[$i]['host'] == $stack['host']
-                && $this->stacks[$i]['port'] == $stack['port'] && $this->stacks[$i]['path'] == $stack['path']) {
+        for ($i = count($stacks) - 1; $i >= 0; $i--) {
+            if ($stacks[$i]['secure'] == $stack['secure'] && $stacks[$i]['host'] == $stack['host']
+                && $stacks[$i]['port'] == $stack['port'] && $stacks[$i]['path'] == $stack['path']) {
                 return $i;
             }
         }
         return -1;
+    }
+
+    protected function rtrim($stacks, $stack)
+    {
+        $num = 0;
+        for ($i = count($stacks) - 1; $i >= 0; $i--) {
+            if ($stacks[$i]['secure'] == $stack['secure'] && $stacks[$i]['host'] == $stack['host']
+                && $stacks[$i]['port'] == $stack['port'] && $stacks[$i]['path'] == $stack['path']) {
+                $num++;
+            } else {
+                break;
+            }
+        }
+        return array_slice($stacks, 0, count($stacks) - $num);
     }
 
     protected function formatStacks($stacks)
