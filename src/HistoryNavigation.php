@@ -38,12 +38,20 @@ class HistoryNavigation
 
     public function prevUrl($url, $defaultUrl = null)
     {
+        $finalDefault = H::$defaultUrl ?? '/';
+        if (!empty($url)) {
+            $finalDefault = $url;
+        }
+        if (!empty($defaultUrl)) {
+            $finalDefault = $defaultUrl;
+        }
+
         if (empty($this->stacks)) {
-            return $defaultUrl ?? (H::$defaultUrl ?? '/');
+            return $finalDefault;
         }
         $index = $this->searchIndex($this->stacks, $this->parseStacks($url)[0]);
         if ($index == -1) {
-            return $defaultUrl ?? (H::$defaultUrl ?? '/');
+            return $finalDefault;
         }
         return $this->formatStacks(array_slice($this->stacks, 0, $index + 1));
     }
@@ -100,7 +108,7 @@ class HistoryNavigation
                 array_pop($urls);
             }
         }
-        array_push($urls, $currentUrl);
+        $urls[] = $currentUrl;
 
         return $urls;
     }
